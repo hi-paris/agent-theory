@@ -8,6 +8,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+import json
+import ast
 from PIL import Image
 from PIL import Image, ImageDraw, ImageFont
 
@@ -21,6 +23,10 @@ from htbuilder.funcs import rgba, rgb
 from pathlib import Path
 import base64
 import time
+
+import numpy as np
+import matplotlib as mp
+from visual_automata.fa.dfa import VisualDFA
 
 
 
@@ -114,35 +120,94 @@ def main():
     st.sidebar.header("Dashboard")
     st.sidebar.markdown("---")
 
-    st.sidebar.header("Select Approach")
+    st.sidebar.header("01 - Select Approach")
     nlp_steps = st.sidebar.selectbox('', ['01 - Buchi  Automaton',
                                           '02 - Approach 02', '03 - Approach 03','04 - Approach 04',
                                           '05 - Approach 05'])
-    st.sidebar.header("Select Parameters")
-    index_review = st.sidebar.number_input("Select a Review by entering index number:", min_value=0, max_value=20000, value=0,
-                                   step=1)
+    st.sidebar.header("02 - Select Parameters")
+
+    with open('data/test.txt', 'r') as f:
+        s = f.read()
+        input_ast_format = ast.literal_eval(s)
+
+
+    input_initial_state = st.sidebar.selectbox(
+    'Select initial state:',
+    list(input_ast_format.keys()))
+
+
+    input_final_states = st.sidebar.multiselect(
+    'Select final states:',
+    list(input_ast_format.keys()),list(np.random.choice(list(input_ast_format.keys()),2)))
+
+
+    st.sidebar.header("03 - Upload Txt File with config")
+
+
+    def file_select(folder='./data'):
+        filelist=os.listdir(folder)
+        st.sidebar.markdown("OR")
+        selectedfile=st.sidebar.selectbox('Select a default dataset',filelist)
+        return os.path.join(folder,selectedfile)
+        
+
+    st.sidebar.button('Upload Data')
+    uploaded_file=st.sidebar.file_uploader('Upload Dataset in .txt',type=['TXT'])
+    if uploaded_file is not None:
+        st.write('hello world')
+
+
+    else:
+        filename=file_select()
+        st.sidebar.info('You selected {}'.format(filename))
+        with open('data/test.txt', 'r') as f:
+            s = f.read()
+            input_ast_format = ast.literal_eval(s)
+
+
+
+
     st.markdown("---")
     st.write(f"                                          ")
     if nlp_steps == "01 - Buchi  Automaton":
 
         st.header("01 - Buchi  Automaton")
-
+        st.write(f"                                          ")
+        st.markdown('#### i - Quick Introduction: ')
         st.write(f"                                          ")
 
 
+        dfa = VisualDFA(
+        states={"q0", "q1", "q2", "q3", "q4"},
+        input_symbols={"0", "1"},
+        transitions=input_ast_format,
+        initial_state=input_initial_state,
+        final_states=set(input_final_states),
+        )
+        
+        st.markdown('#### ii - Diagram: ')
+        digraph_output = dfa.show_diagram("101")
+        st.graphviz_chart(digraph_output)
+
+        st.markdown('#### iii - Input Table: ')
+        digraph_table = dfa.input_check("10011")
+        st.table(digraph_table)
+  
+
         snippet = f"""
+        dfa = VisualDFA(
+        states={"q0", "q1", "q2", "q3", "q4"},
+        input_symbols={"0", "1"},
+        transitions=input_ast_format,
+        initial_state=input_initial_state,
+        final_states=set(input_final_states),
+        )
     
-        >>> import pandas as pd
-        >>> import numpy as  as np
-    
-        >>> df.head(5)
-        #Or
-        >>> df.tail(5)
     
         """
         code_header_placeholder = st.empty()
         snippet_placeholder = st.empty()
-        code_header_placeholder.subheader(f"**Code for the step: 00 - Show  Dataset**")
+        code_header_placeholder.subheader(f"**Code for the step: 01 - Buchi  Automaton**")
         snippet_placeholder.code(snippet)
     st.write("                     ")
     st.write("                     ")
