@@ -71,7 +71,7 @@ def main():
     # hide the footer
     hide_header_footer()
 
-    images = Image.open('./images/binary.png')
+    images = Image.open('./images/hi-paris.png')
     st.image(images, width=400)
 
     st.markdown("# Behind the Agent Theory 🔍 🖥")
@@ -104,7 +104,7 @@ def main():
 
     st.markdown(
         """
-        [<img src='data:image/png;base64,{}' class='img-fluid' width=25 height=25>](https://github.com/gaetanbrison/nlp) <small> NLP 4 Critics 1.0.0 | November 2021</small>""".format(
+        [<img src='data:image/png;base64,{}' class='img-fluid' width=25 height=25>](https://github.com/hi-paris/agent-theory) <small> agent-theory 0.0.1 | September 2022</small>""".format(
             img_to_bytes("./images/github.png")
         ),
         unsafe_allow_html=True,
@@ -114,19 +114,18 @@ def main():
     st.sidebar.header("Dashboard")
     st.sidebar.markdown("---")
 
-    st.sidebar.header("Select Project Step")
-    nlp_steps = st.sidebar.selectbox('', ['00 - Show  Dataset', '01 - Basic Information',
-                                          '02 - Tokenization', '03 - Lemmatization','04 - Name Entity Recognition',
-                                          '05 - Part of Speech','06 - Sentiment Analysis',
-                                          '07 - Text Summarization'])
-
+    st.sidebar.header("Select Approach")
+    nlp_steps = st.sidebar.selectbox('', ['01 - Buchi  Automaton',
+                                          '02 - Approach 02', '03 - Approach 03','04 - Approach 04',
+                                          '05 - Approach 05'])
+    st.sidebar.header("Select Parameters")
     index_review = st.sidebar.number_input("Select a Review by entering index number:", min_value=0, max_value=20000, value=0,
                                    step=1)
     st.markdown("---")
     st.write(f"                                          ")
-    if nlp_steps == "00 - Show  Dataset":
+    if nlp_steps == "01 - Buchi  Automaton":
 
-        st.header("00 - Show  Dataset")
+        st.header("01 - Buchi  Automaton")
 
         st.write(f"                                          ")
 
@@ -145,9 +144,10 @@ def main():
         snippet_placeholder = st.empty()
         code_header_placeholder.subheader(f"**Code for the step: 00 - Show  Dataset**")
         snippet_placeholder.code(snippet)
+    st.write("                     ")
+    st.write("                     ")
     st.markdown("---")
-    st.write("                     ")
-    st.write("                     ")
+
 
 
 
@@ -156,10 +156,10 @@ if __name__=='__main__':
     main()
 
 st.markdown(" ")
-st.markdown("### ** 👨🏼‍💻 App Contributors: **")
-st.image(['images/mylene.png','images/gaetan.png'], width=100,caption=["Mylène","Gaëtan"])
+st.markdown("### ** 👨🏼‍💻 Télécom Paris Researcher: **")
+st.image(['images/vadim.png'], width=100,caption=["Vadim Malvone"])
 
-st.markdown(f"####  Link to Project Website [here]({'https://dramacritiques.com/fr/accueil/'}) 🚀 ")
+st.markdown(f"####  Link to Project Website [here]({'https://github.com/hi-paris/agent-theory'}) 🚀 ")
 
 
 
@@ -224,7 +224,7 @@ def layout(*args):
 def footer2():
     myargs = [
         " Made by ",
-        link("https://odhn.ens.psl.eu/en/newsroom/dans-les-coulisses-des-humanites-numeriques", "Mylène & Gaëtan"),
+        link("https://engineeringteam.hi-paris.fr/", "Hi! PARIS Engineering Team"),
         " 👩🏼‍💻 👨🏼‍💻"
     ]
     layout(*myargs)
