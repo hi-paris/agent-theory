@@ -22,6 +22,10 @@ from pathlib import Path
 import base64
 import time
 
+import numpy as np
+import matplotlib as mp
+from visual_automata.fa.dfa import VisualDFA
+
 
 
 
@@ -119,8 +123,15 @@ def main():
                                           '02 - Approach 02', '03 - Approach 03','04 - Approach 04',
                                           '05 - Approach 05'])
     st.sidebar.header("Select Parameters")
-    index_review = st.sidebar.number_input("Select a Review by entering index number:", min_value=0, max_value=20000, value=0,
-                                   step=1)
+    input_initial_state = st.sidebar.multiselect(
+    'Select initial state:',
+    ['q0', 'q1', 'q2', 'q3'],['q0'])
+
+
+    input_final_states = st.sidebar.multiselect(
+    'Select final states:',
+    ['q0', 'q1', 'q2', 'q3'],['q3','q1'])
+
     st.markdown("---")
     st.write(f"                                          ")
     if nlp_steps == "01 - Buchi  Automaton":
@@ -129,6 +140,29 @@ def main():
 
         st.write(f"                                          ")
 
+
+        dfa = VisualDFA(
+        states={"q0", "q1", "q2", "q3", "q4"},
+        input_symbols={"0", "1"},
+        transitions={
+        "q0": {"0": "q3", "1": "q1"},
+        "q1": {"0": "q3", "1": "q2"},
+        "q2": {"0": "q3", "1": "q2"},
+        "q3": {"0": "q4", "1": "q1"},
+        "q4": {"0": "q4", "1": "q1"},
+        },
+        initial_state=input_initial_state[0],
+        final_states=set(input_final_states),
+        )
+        
+        st.markdown('### Diagram: ')
+        digraph_output = dfa.show_diagram("101")
+        st.graphviz_chart(digraph_output)
+
+        st.markdown('### Input Table: ')
+        digraph_table = dfa.input_check("10011")
+        st.table(digraph_table)
+  
 
         snippet = f"""
     
