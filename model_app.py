@@ -826,7 +826,7 @@ if __name__=='__main__':
 
 st.markdown(" ")
 st.markdown("### ** 👨🏼‍💻 Télécom Paris Researcher: **")
-st.image(['images/1.png','images/2.png'], width=150,caption=["Vadim Malvone","Angelo Ferrando"])
+st.image(['images/1.png'], width=150,caption=["Vadim Malvone"])
 
 st.markdown(f"####  Link to Project Website [here]({'https://github.com/hi-paris/agent-theory'}) 🚀 ")
 
