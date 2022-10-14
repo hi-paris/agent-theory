@@ -1,10 +1,10 @@
 Transition
-* l&s l&l r&l r&r l&r r&s 0
+* ls1 ll2 rl3 rs4 lr5 rr6 0
 a 0 0 0 0 0 0 o
 0 0 0 0 0 0 0 o
 0 0 e 0 0 0 0 o
 a 0 0 0 0 0 0 o
-a 0 0 0 0 e 0 o
+a 0 0 0 e 0 0 o
 0 0 0 e 0 0 0 o
 * 0 0 0 0 0 0 0
 Unkown_Transition_by
