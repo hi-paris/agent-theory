@@ -8,7 +8,6 @@ import numpy as np
 
 import graphviz
 
-from PIL import Image
 from PIL import Image, ImageDraw, ImageFont
 from htbuilder import HtmlElement, div, ul, li, br, hr, a, p, img, styles, classes, fonts
 from htbuilder.units import percent, px
@@ -78,13 +77,10 @@ def main():
     # hide the footer
     hide_header_footer()
 
-    images = Image.open('./images/hi-paris.png')
-    st.image(images, width=400)
-
-    st.markdown("# Behind the Agent Theory 🔍 🖥")
+    st.markdown("# VITAMIN 🔍 🖥")
     st.subheader(
         """
-        This is a place where you can get familiar with the Agent Theory  🧪
+        VerIficaTion of A MultI ageNt system  🧪
         """
     )
     st.markdown("     ")
@@ -135,7 +131,19 @@ if __name__=='__main__':
 
 st.markdown(" ")
 st.markdown("### ** 👨🏼‍💻 Télécom Paris Researcher: **")
-st.image(['images/1.png'], width=150,caption=["Vadim Malvone"])
+st.image(['images/1.png'], width=230,caption=["Vadim Malvone"])
+
+st.markdown('### Made by Hi!Paris')
+images = Image.open('./images/hi-paris.png')
+st.image(images, width=250)
+st.write('    ')
+st.markdown('### Contributors:')
+PA=Image.open('./images/PA.jpg')
+Pierre=Image.open('./images/Pierre.jpg')
+GAE=Image.open('./images/gaetan.png')
+st.image([PA,GAE,Pierre],width=110)
+
+
 
 st.markdown(f"####  Link to Project Website [here]({'https://github.com/hi-paris/agent-theory'}) 🚀 ")
 

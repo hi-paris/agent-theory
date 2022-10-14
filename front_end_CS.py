@@ -30,16 +30,17 @@ def display_case(nlp_steps):
     [0,0,0,3,1],
     [0,0,0,0,3]])
 
-    Istate=3
+
+    Istate=1
+
 
     Fstate=[4,5]
     t1,t2,t3 = Init(Mat_transition,Istate,Fstate)
     st.graphviz_chart(t1)
 
     st.write(f"        ")
-    st.write(f"        ")
-    st.markdown('#### iv - Input Table: ')
-    t2
+
+
 
 
 
@@ -96,7 +97,9 @@ def display_case(nlp_steps):
 
     st.write(f"        ")
     st.write(f"        ")
-    code_header_placeholder.markdown(f"#### v - Code 01 - Initialization")
+
+    code_header_placeholder.markdown(f"#### iii - Code 01 - Initialization")
+
     snippet_placeholder.code(snippet)
     st.write("     ")
     st.write("     ")
@@ -245,12 +248,14 @@ def display_case(nlp_steps):
     st.write("       ")
     st.markdown('#### iii - Strategy')
     st.write("        ")
-    st.write('Action of t1 in the initial state')
-    t1_act=st.selectbox(' ',['rigth','left'])
-    st.write('Action of t2 in the initial state')
-    t2_act=st.selectbox(' ',['rigth','straight', 'left'])
-    st.write('Action of controller in the state after')
-    c_act=st.selectbox(' ',['6','5','4','3','2','1'])
+
+    st.write('     ')
+    t1_act=st.selectbox('Action of t1 in the initial state',['right','left'])
+    st.write('      ')
+    t2_act=st.selectbox('Action of t2 in the initial state',['right','straight', 'left'])
+    st.write('     ')
+    c_act=st.selectbox('Action of controller in the state after',['6','5','4','3','2','1'])
+
     st.write('    ')
     cs1=st.selectbox('Action in s1',['a','o', 'e'])
     st.write('    ')
@@ -378,14 +383,31 @@ def display_case(nlp_steps):
     st.write(f"        ")
     st.write(f"        ")
     st.markdown('#### ii - Strategy')
-    P10=st.selectbox('Action of P1 in the initial state',['A','B','0'])
-    P11=st.selectbox('Action of P1 in the state 1',['A','B','0'])
-    P12=st.selectbox('Action of P1 in the state 2',['A','B','0'])
-    P13=st.selectbox('Action of P1 in the state 3',['A','B','0'])
-    P20=st.selectbox('Action of P2 in the initial state',['C','D','0'])
-    P21=st.selectbox('Action of P2 in the state 1',['C','D','0'])
-    P22=st.selectbox('Action of P2 in the state 2',['C','D','0'])
-    P23=st.selectbox('Action of P2 in the state 3',['C','D','0'])
+
+    P10=st.selectbox('Action of P1 in the initial state',['A','B','Do nothing'])
+    P11=st.selectbox('Action of P1 in the state 1',['A','B','Do nothing'])
+    P12=st.selectbox('Action of P1 in the state 2',['A','B','Do nothing'])
+    P13=st.selectbox('Action of P1 in the state 3',['A','B','Do nothing'])
+    P20=st.selectbox('Action of P2 in the initial state',['C','D','Do nothing'])
+    P21=st.selectbox('Action of P2 in the state 1',['C','D','Do nothing'])
+    P22=st.selectbox('Action of P2 in the state 2',['C','D','Do nothing'])
+    P23=st.selectbox('Action of P2 in the state 3',['C','D','Do nothing'])
+    if P10=='Do nothing':
+      P10='0'
+    if P11=='Do nothing':
+      P11='0'
+    if P12=='Do nothing':
+      P12='0'
+    if P13=='Do nothing':
+      P13='0'
+    if P20=='Do nothing':
+      P20='0'
+    if P21=='Do nothing':
+      P21='0'
+    if P22=='Do nothing':
+      P22='0'
+    if P23=='Do nothing':
+      P23='0'
 
     st.write(f"        ")
     st.write(f"        ")
@@ -403,8 +425,7 @@ def display_case(nlp_steps):
 
     st.write(f"        ")
     st.write(f"        ")
-    code_header_placeholder.markdown(f"#### iv - Code 05 - Strategy Example")
-    snippet_placeholder.code(snippet)
+
     st.write("     ")
     st.write("     ")
     st.markdown("---")
@@ -502,7 +523,9 @@ def display_MS():
   st.write(f"    ")
   List_name_agent=[]
   for id_agent in range(int(Na)):
-    tmp=st.text_input('Name of the state number '+str(id_agent),'A'+str(id_agent))
+
+    tmp=st.text_input('Name of the agent number '+str(id_agent),'A'+str(id_agent))
+
     List_name_agent.append(tmp)
   st.write(f"    ")
   NS=st.selectbox('Number of State',['1','2','3','4','5'])

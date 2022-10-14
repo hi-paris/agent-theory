@@ -158,7 +158,9 @@ def iCGS_train(ActT1="r",ActT2="r",ActC="6",boolean_Red=True,cs1='a',cs2='a',cs3
 
 ### Example Graph
 def example_strategy(h1,h2):
-  game_strategy=game(load_file=True,path1='example_strategy.txt')
+
+  game_strategy=game(load_file=True,path1='example_strategy.txt',AW=True)
+
   if h1[0]=='A' and h2[0]!='0':
     if h2[1]=='D':
       if (h1[2]=='A' and h2[2]=='D') or (h1[2]=='B' and h2[2]=='C'):
