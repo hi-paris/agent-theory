@@ -1,6 +1,9 @@
 import streamlit as st
 from back_end_CS import *
 import os
+
+
+
 def display_case(nlp_steps):
 
 
@@ -30,16 +33,13 @@ def display_case(nlp_steps):
     [0,0,0,3,1],
     [0,0,0,0,3]])
 
-
     Istate=1
-
 
     Fstate=[4,5]
     t1,t2,t3 = Init(Mat_transition,Istate,Fstate)
     st.graphviz_chart(t1)
 
     st.write(f"        ")
-
 
 
 
@@ -97,9 +97,7 @@ def display_case(nlp_steps):
 
     st.write(f"        ")
     st.write(f"        ")
-
     code_header_placeholder.markdown(f"#### iii - Code 01 - Initialization")
-
     snippet_placeholder.code(snippet)
     st.write("     ")
     st.write("     ")
@@ -248,14 +246,12 @@ def display_case(nlp_steps):
     st.write("       ")
     st.markdown('#### iii - Strategy')
     st.write("        ")
-
     st.write('     ')
     t1_act=st.selectbox('Action of t1 in the initial state',['right','left'])
     st.write('      ')
     t2_act=st.selectbox('Action of t2 in the initial state',['right','straight', 'left'])
     st.write('     ')
     c_act=st.selectbox('Action of controller in the state after',['6','5','4','3','2','1'])
-
     st.write('    ')
     cs1=st.selectbox('Action in s1',['a','o', 'e'])
     st.write('    ')
@@ -383,7 +379,6 @@ def display_case(nlp_steps):
     st.write(f"        ")
     st.write(f"        ")
     st.markdown('#### ii - Strategy')
-
     P10=st.selectbox('Action of P1 in the initial state',['A','B','Do nothing'])
     P11=st.selectbox('Action of P1 in the state 1',['A','B','Do nothing'])
     P12=st.selectbox('Action of P1 in the state 2',['A','B','Do nothing'])
@@ -408,7 +403,6 @@ def display_case(nlp_steps):
       P22='0'
     if P23=='Do nothing':
       P23='0'
-
     st.write(f"        ")
     st.write(f"        ")
     st.markdown('#### iii - Diagram: ')
@@ -425,7 +419,6 @@ def display_case(nlp_steps):
 
     st.write(f"        ")
     st.write(f"        ")
-
     st.write("     ")
     st.write("     ")
     st.markdown("---")
@@ -485,17 +478,270 @@ def display_case(nlp_steps):
 
 
 
+def D_parser_test():
+  st.header("Parser")
+  st.write(f"    ")
+  print("logic")
+  print(st.session_state.info_model_test[0][0])
+  if st.session_state.info_model_test[0][0]=='LTL':
+    print("formula")
+    print(st.session_state.info_model_test[0][1])
+    lexer = LTLLexer(st.session_state.info_model_test[0][1])
+    print("lexer")
+    print(lexer)
+    stream = CommonTokenStream(lexer)
+    print("stream")
+    print(stream)
+    parser = LTLParser(stream)
+    print("parser")
+    print(parser)
+    tree = parser.ltlExpr()
+    visitor = YOUR_VISITOR_CLASS()
+    print(visitor.visit(tree))
 
 
+
+def parser(formula):
+    change=[[' ',''],['||','|'],['&&','&'],['or', '|'],['and','&'],['implies','>'],['->','>'],['next','X'],['eventually','F'],['always','G']]
+    operatorSimpleL=[')',']']
+    operatorSimpleR=['X','F','G','(','[']
+    operatorDouble=['|','&','U','R','>']
+    closeoperator=[')',']']
+    openoperator=['(','[']
+    operator=operatorSimpleL+operatorSimpleR+operatorDouble
+    for operator_change in change:
+        formula=formula.replace(operator_change[0],operator_change[1])
+    def cut(formula):
+        new_formula=[]
+        tmp=''
+        for letter in formula:
+            if letter in operator:
+                if tmp!='':
+                    new_formula.append(tmp)
+                new_formula.append(letter)
+                tmp=''
+            else:
+                tmp+=letter
+        new_formula.append(tmp)
+        return new_formula
+    cut_formula=cut(formula)
+    def verif_paranthese(formula):
+        cmpt=0
+        for obj in formula:
+            if obj in openoperator:
+                cmpt+=1
+            elif obj in closeoperator:
+                cmpt+=-1
+        return not(cmpt)
+    if not(verif_paranthese(cut_formula)):
+        return False
+    
+    cut_class=[]
+    for obj in cut_formula:
+        if obj in operatorDouble:
+            cut_class.append('D')
+        elif obj in operatorSimpleL:
+            cut_class.append('L')
+        elif obj in operatorSimpleR:
+            cut_class.append('R')
+        else:
+            cut_class.append('AP')
+    def verif(list_cut):
+        if not(list_cut[0]=='AP' or list_cut[0]=='L'):
+            return False
+        for id_obj in range(len(list_cut)-1):
+            print(id_obj)
+            if list_cut[id_obj]=='R':
+                if (list_cut[id_obj+1]=='L' or list_cut[id_obj+1]=='D'):
+                    return False
+            elif list_cut[id_obj]=='D':
+                if (list_cut[id_obj+1]=='L' or list_cut[id_obj+1]=='D'):
+                    return False
+            elif list_cut[id_obj]=='AP':
+                if (list_cut[id_obj+1]=='R' or list_cut[id_obj+1]=='AP') :
+                    return False
+            elif list_cut[id_obj]=='L':
+                if (list_cut[id_obj+1]=='AP' or list_cut[id_obj+1]=='L' or list_cut[id_obj+1]=='R'):
+                    return False
+        if (list_cut[-1]=='R' or list_cut[-1]=='D'):
+            return False
+        return True     
+    return verif(cut_class),cut_formula,cut_class
 
 
 
 
 
 def display_MCMAS():
+  if st.session_state.cmpt_model==-1:
+    st.markdown("---")
+    st.write(f"    ")
+    st.header("Model Checking for MAS")
+    st.write(f"    ")
+    st.write(f"    ")
+    st.markdown('Logic Selection ')
+    Logic=st.selectbox('Selec your logic',['ATL','CTL','LTL','SL'])
+    st.write(f"    ")
+    st.write(f"    ")
+    formula=st.text_input('Write your formula',' ')
+    st.write("     ")
+    st.write('Your formula with the '+Logic+' logic is '+formula)
+    st.write("     ")
+    Verif,list_pars,list_type=parser(formula)
+    st.write(str(Verif))
+    st.write(str(list_pars))
+    st.write("     ")
+    st.markdown("---")
+    if st.button('Next : To Parser'):
+      (st.session_state.info_model_test).append([Logic,formula])
+      st.session_state.cmpt_model=-2
+      st.experimental_rerun()
+  if st.session_state.cmpt_model==-2:
+    D_parser_test()
+
+
+
+
+def display_MS():
+  if st.session_state.cmpt_model<=0:
+    D_agent()
+  elif st.session_state.cmpt_model==1:
+    D_state()
+  elif st.session_state.cmpt_model==2:
+    D_action()
+  
+  elif st.session_state.cmpt_model==3:
+    Na=len(st.session_state.info_model[0][0])
+    D_transition(Na-st.session_state.info_model[0][1]-1,Na)
+  elif st.session_state.cmpt_model==4:
+    st.session_state.mat_transi=[]
+    st.session_state.info_model[0][1]=len(st.session_state.info_model[0][0])
+    D_printgraph()
+  elif st.session_state.cmpt_model==5:
+    Na=len(st.session_state.info_model[0][0])
+    D_strategy(Na-st.session_state.info_model[0][1]-1,Na)
+  elif st.session_state.cmpt_model==6:
+    D_logic()
+  elif st.session_state.cmpt_model==7:
+    D_parser()
+
   st.markdown("---")
   st.write(f"    ")
+  st.header("Model design for User")
+  st.write(f"    ")
+  st.markdown("---")
 
+
+def D_agent():
+  st.write(f"    ")
+  st.write(f"    ")
+  Na=st.selectbox('Number of agent',['1','2','3','4'])
+  st.write(f"    ")
+  List_name_agent=[]
+  for id_agent in range(int(Na)):
+    tmp=st.text_input('Name of the agent number '+str(id_agent),'A'+str(id_agent))
+    List_name_agent.append(tmp)
+  st.write(f"    ")
+  if st.button('Next : To Agent'):
+    (st.session_state.info_model).append([List_name_agent,len(List_name_agent)-1])
+    st.session_state.cmpt_model=1
+    print(st.session_state.info_model[0])
+    st.experimental_rerun()
+
+
+def D_state():
+  NS=st.selectbox('Number of State',['1','2','3','4','5'])
+  st.write("     ")
+  List_name_state=[]
+  for id_state in range(int(NS)):
+    tmp=st.text_input('Name of the state number '+str(id_state),'s'+str(id_state))
+    List_name_state.append(tmp)
+  st.write(f"     ")
+  if st.button('Next : To Action'):
+    (st.session_state.info_model).append(List_name_state)
+    st.session_state.cmpt_model=2
+    st.experimental_rerun()
+
+def D_action():
+  Nact=st.selectbox('Number of Action',['1','2','3','4','5','6','7'])
+  Alphabet=['A','B','C','D','E','F','G']
+  st.write("     ")
+  List_name_action=['*','No Action']
+  for id_action in range(int(Nact)):
+    tmp=st.text_input('Name of the action number '+str(id_action),Alphabet[id_action])
+    List_name_action.append(tmp)
+  st.write(f"     ")
+  if st.button('Next : To Transition'):
+    (st.session_state.info_model).append(List_name_action)
+    st.session_state.cmpt_model=3
+    st.experimental_rerun()
+
+
+def D_transition(act_input,Na):
+  st.write('Design your graph')
+  st.write('For each couple of state')
+  st.write("     ")
+  Mat_transition=[]
+  List_name_state=st.session_state.info_model[1]
+  NS=len(List_name_state)
+  List_action=st.session_state.info_model[2]
+  for id_state1 in range(NS):
+    List_transition=[]
+    for id_state2 in range(int(NS)):
+      tmp=st.multiselect('Action of '+st.session_state.info_model[0][0][act_input]+ ' in the state '+List_name_state[id_state1]+' to '+List_name_state[id_state2]+'.',List_action,List_action[1])
+      List_transition.append(tmp)
+    Mat_transition.append(List_transition)
+  st.write("     ")
+  if (Na-act_input)>1:
+    if st.button('Next : To '+st.session_state.info_model[0][0][act_input+1]):
+      st.session_state.info_model[0][1]+=(-1)
+      (st.session_state.mat_transi).append(Mat_transition)
+      st.session_state.cmpt_model=3
+      st.experimental_rerun()
+  else:
+    if st.button('Next : To Graph'):
+      (st.session_state.mat_transi).append(Mat_transition)
+      st.session_state.cmpt_model=4
+      Mat_to_Label()
+      st.experimental_rerun()
+
+
+def Mat_to_Label():
+  def concat(list_str):
+    tmp1=''
+    for stri in list_str:
+      tmp1+=stri
+    return tmp1
+  
+  print(st.session_state.mat_transi)
+  Mat=[]
+  for s_in in range(len(st.session_state.info_model[1])):
+    Lis=[]
+    for s_out in range(len(st.session_state.info_model[1])):
+      tmp=''
+      for mat_label in st.session_state.mat_transi:
+        tmp+=concat(mat_label[s_in][s_out])
+        tmp+='|'
+      Lis.append(tmp[:-1])
+    Mat.append(Lis)
+  print(Mat)
+  st.session_state.info_model.append(Mat)
+
+
+
+def D_printgraph():
+  st.write('Graph')
+  st.write("     ")
+  st.markdown('#### iii - Diagram: ')
+  test=display_graph_MS(st.session_state.info_model[3],st.session_state.info_model[0][0],st.session_state.info_model[1])
+  st.graphviz_chart(test)
+  if st.button('Next : To Strategy'):
+    (st.session_state.info_model).append(test)
+    st.session_state.cmpt_model=5
+    st.experimental_rerun()
+
+
+def D_logic():
   st.header("Model Checking for MAS")
   st.write(f"    ")
   st.write(f"    ")
@@ -508,54 +754,53 @@ def display_MCMAS():
   st.write("     ")
   st.write('Your formula with the '+Logic+' logic is '+formula)
   st.write("     ")
+  Verif,list_pars,list_type=parser(formula)
+  st.write(str(Verif))
+  st.write(str(list_pars))
+  st.write(str(list_type))
+  if st.button('Next : To ...'):
+    (st.session_state.info_model).append([Logic,formula])
+    st.session_state.cmpt_model=6
+    st.experimental_rerun()
+
+
+#def D_parser():
+#  st.header("Parser")
+#  st.write(f"    ")
+#  if st.session_state.info_model[5][0]=='LTL':
+#    lexer = LTLLexer(st.session_state.info_model[5][1])
+#    stream = CommonTokenStream(lexer)
+#    parser = LTLParser(stream)
+#    tree = parser.ltlExpr()
+#    visitor = YOUR_VISITOR_CLASS()
+#    print(visitor.visit(tree))
+
+
+def D_strategy(act_input,id_state1):
+  st.write('Design your strategy')
+  st.write('For each agent in each state')
   st.write("     ")
-  st.markdown("---")
-
-
-def display_MS():
-  st.markdown("---")
-  st.write(f"    ")
-
-  st.header("Model design for User")
-  st.write(f"    ")
-  st.write(f"    ")
-  Na=st.selectbox('Number of agent',['1','2','3','4'])
-  st.write(f"    ")
-  List_name_agent=[]
-  for id_agent in range(int(Na)):
-
-    tmp=st.text_input('Name of the agent number '+str(id_agent),'A'+str(id_agent))
-
-    List_name_agent.append(tmp)
-  st.write(f"    ")
-  NS=st.selectbox('Number of State',['1','2','3','4','5'])
+  List_strategy=[]
+  List_name_state=st.session_state.info_model[1]
+  NS=len(List_name_state)
+  List_action=st.session_state.info_model[2]
+  for id_state1 in range(NS):
+    tmp=st.selectbox('Action of '+st.session_state.info_model[0][0][act_input]+ ' in the state '+List_name_state[id_state1]+'.',List_action)
+    print(tmp)
+    List_strategy.append(tmp)
   st.write("     ")
-  List_name_state=[]
-  for id_state in range(int(NS)):
-    tmp=st.text_input('Name of the state number '+str(id_state),'s'+str(id_state))
-    List_name_state.append(tmp)
-  st.write("      ")
-  st.write('Design your graph')
-  st.write('For each couple of state')
-  st.write("     ")
-  Mat_transition=[]
-  for id_state1 in range(int(NS)):
-    List_transition=[]
-    for id_state2 in range(int(NS)):
-      tmp=st.text_input('If the state '+List_name_state[id_state1]+' is connect with '+List_name_state[id_state2]+' ,write the name of the transition, 0 otherwise','0')
-      List_transition.append(tmp)
-    Mat_transition.append(List_transition)
-  st.write("     ")
-  st.write("     ")
-  st.write('Graph')
-  st.write("     ")
-  if st.button('Print Diagram'):
-    st.markdown('#### iii - Diagram: ')
-    test=display_graph_MS(Mat_transition,List_name_agent,List_name_state)
-    st.graphviz_chart(test)
-  
-  st.markdown("---")
-
-
+  if (id_state1-act_input)>1:
+    if st.button('Next : To '+st.session_state.info_model[0][0][act_input+1]):
+      st.session_state.info_model[0][1]+=(-1)
+      (st.session_state.mat_transi).append(List_strategy)
+      st.session_state.cmpt_model=5
+      st.experimental_rerun()
+  else:
+    if st.button('Next : To Logic'):
+      (st.session_state.mat_transi).append(List_strategy)
+      st.session_state.cmpt_model=6
+      st.session_state.info_model.append(st.session_state.mat_transi)
+      print(st.session_state.info_model)
+      st.experimental_rerun()
 
 
